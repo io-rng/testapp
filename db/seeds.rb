@@ -42,3 +42,11 @@ Product.create!(title: 'Rails Test Prescriptions',
       </p>},
   image_url: 'rtp.jpg',
   price: 34.95)
+
+Product.create!(title: 'Lorem',
+  description:
+    %{<p>
+        <em>Lorem</em> This is a test book to add in the project. Hope it work.
+      </p>},
+  image_url: 'lorem.jpg',
+  price: 18.55)

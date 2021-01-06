@@ -1,64 +1,89 @@
 #---
-# Excerpted from "Agile Web Development with Rails",
+# Excerpted from "Agile Web Development with Rails 6",
 # published by The Pragmatic Bookshelf.
 # Copyrights apply to this code. It may not be used to create training material,
 # courses, books, articles, and the like. Contact us if you are in doubt.
 # We make no guarantees that this code is fit for any purpose.
-# Visit http://www.pragmaticprogrammer.com/titles/rails4 for more book information.
+# Visit http://www.pragmaticprogrammer.com/titles/rails6 for more book information.
 #---
 require 'test_helper'
 
-class ProductsControllerTest < ActionController::TestCase
+class ProductsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @product = products(:one)
-      @update = {
-        title: 'Lorem Ipsum',
-        description: 'Wibbles are fun!',
-        image_url: 'lorem.jpg',
-        price: 19.95
-      }
-end
+    @title = "The Great Book #{rand(1000)}"
 
+  end
+
+  
   test "should get index" do
-    get :index
+    get products_url
     assert_response :success
-    assert_not_nil assigns(:products)
   end
 
   test "should get new" do
-    get :new
+    get new_product_url
     assert_response :success
   end
 
+  
   test "should create product" do
     assert_difference('Product.count') do
-      post :create, params: { product: @update }        
-  end
-  assert_redirected_to product_path(assigns(:product))
-  
+      
+    post products_url, params: { 
+        product: { 
+          description: @product.description, 
+          image_url: @product.image_url, 
+          price: @product.price, 
+          title: @title,
+        }
+      }
+    
+    end
+
+    assert_redirected_to product_url(Product.last)
   end
 
+  
   test "should show product" do
-    get :show,  params: { id: @product } # id: @product 
+    get product_url(@product)
     assert_response :success
   end
 
   test "should get edit" do
-    get :edit, params: { id: @product } #id: @product 
+    get edit_product_url(@product)
     assert_response :success
   end
 
+  
   test "should update product" do
-    patch :update, params: {id: @product, product: @update}
-    assert_redirected_to product_path(assigns(:product))
+    
+    patch product_url(@product), params: { 
+        product: { 
+          description: @product.description, 
+          image_url: @product.image_url, 
+          price: @product.price, 
+          title: @title,
+        }
+      }
+    
+    assert_redirected_to product_url(@product)
   end
 
+  
+  test "can't delete product in cart" do
+    assert_difference('Product.count', 0) do
+      delete product_url(products(:two))
+    end
+
+    assert_redirected_to products_url
+  end
 
   test "should destroy product" do
     assert_difference('Product.count', -1) do
-      delete :destroy, params: {id: @product}
+      delete product_url(@product)
     end
 
-    assert_redirected_to products_path
+    assert_redirected_to products_url
   end
 end

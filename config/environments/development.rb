@@ -59,4 +59,7 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+    #Channels  can  have  security  implications,  so  by  default  Rails  only  allowsaccess from the localhost when running in development mode. If you’re doingdevelopment with multiple machines, you must disable this check.
+  config.action_cable.disable_request_forgery_protection = true
 end
